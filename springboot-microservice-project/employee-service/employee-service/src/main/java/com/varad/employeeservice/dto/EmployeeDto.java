@@ -22,4 +22,7 @@ public class EmployeeDto {
 
 	@NotEmpty(message = "Email should not be empty")
 	private String email;
+
+	@NotEmpty(message = "Department code should not be empty")
+	private String departmentCode;
 }
