@@ -1,10 +1,7 @@
 package com.varad.employeeservice.service.impl;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import com.varad.employeeservice.dto.APIResponseDto;
 import com.varad.employeeservice.dto.DepartmentDto;
@@ -12,6 +9,7 @@ import com.varad.employeeservice.dto.EmployeeDto;
 import com.varad.employeeservice.entity.Employee;
 import com.varad.employeeservice.exception.ResourceNotFoundException;
 import com.varad.employeeservice.repository.EmployeeRepository;
+import com.varad.employeeservice.service.APIClient;
 import com.varad.employeeservice.service.EmployeeService;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +21,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	private EmployeeRepository employeeRepository;
 	private ModelMapper modelMapper;
 	// private RestTemplate restTemplate;
-	private WebClient webClient;
+	// private WebClient webClient;
+	private APIClient apiClient;
 
 	@Override
 	public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
@@ -38,15 +37,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 				.orElseThrow(() -> new ResourceNotFoundException("Employee not found with id: " + employeeId));
 
 		String url = "http://localhost:8080/api/departments/" + employee.getDepartmentCode();
-		
-//		ResponseEntity<DepartmentDto> responseEntity = restTemplate.getForEntity(url, DepartmentDto.class);
-//		DepartmentDto departmentDto = responseEntity.getBody();
-		
-		DepartmentDto departmentDto = webClient.get()
-				.uri(url)
-				.retrieve()
-				.bodyToMono(DepartmentDto.class)
-				.block();
+
+		// Using RestTemplate
+		// ResponseEntity<DepartmentDto> responseEntity = restTemplate.getForEntity(url,
+		// DepartmentDto.class);
+		// DepartmentDto departmentDto = responseEntity.getBody();
+
+		// Using WebClient
+		// DepartmentDto departmentDto =
+		// webClient.get().uri(url).retrieve().bodyToMono(DepartmentDto.class).block();
+
+		// Using Feign Client
+		DepartmentDto departmentDto = apiClient.getDepartmentByCode(employee.getDepartmentCode());
 
 		EmployeeDto employeeDto = modelMapper.map(employee, EmployeeDto.class);
 
