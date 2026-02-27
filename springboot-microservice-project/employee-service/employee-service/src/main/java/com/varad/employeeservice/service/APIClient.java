@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.varad.employeeservice.dto.DepartmentDto;
 
-@FeignClient(name = "department-service", url = "http://localhost:8080")
+//@FeignClient(name = "department-service", url = "http://localhost:8080")
+@FeignClient(name = "DEPARTMENT-SERVICE")
 public interface APIClient {
 
 	@GetMapping("/api/departments/{department-code}")
